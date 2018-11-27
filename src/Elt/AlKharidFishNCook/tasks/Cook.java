@@ -17,26 +17,16 @@ public class Cook extends Task {
     public Cook(ClientContext ctx) {
         super(ctx);
     }
-
-    private void clickRawFish() {
-        for (Integer rawFishId : rawFishIds) {
-            if (ctx.inventory.select().id(rawFishId).count() > 0) {
-                ctx.inventory.select().id(rawFishId).poll().click();
-                return;
-            }
-        }
-    }
-
     @Override
     public boolean activate() {
         return (ctx.inventory.select().count() == 28 && hasRawFish());
     }
 
     @Override
-    public void execute() {
-        if (!ctx.objects.select().id(rangeId).isEmpty() && ctx.objects.select().id(rangeId).nearest().poll().tile().distanceTo(ctx.players.local()) < 3) {
-            if (ctx.widgets.component(307, 3).visible()) {
-                ctx.widgets.widget(307).component(3).interact("Cook All");
+    public void execute() {//range widget 270,component 14.38,
+            if (!ctx.objects.select().id(rangeId).isEmpty() && ctx.objects.select().id(rangeId).nearest().poll().tile().distanceTo(ctx.players.local()) < 3) {
+            if (ctx.widgets.component(270,14).visible()) {
+                ctx.widgets.widget(270).component(14).click();
                 Condition.wait(new Callable<Boolean>() {
                     @Override
                     public Boolean call() throws Exception {
@@ -45,12 +35,11 @@ public class Cook extends Task {
                 }, 150, 20);
             } else {
                 final GameObject range = ctx.objects.select().id(rangeId).nearest().poll();
-                clickRawFish();
                 range.click();
                 Condition.wait(new Callable<Boolean>() {
                     @Override
                     public Boolean call() throws Exception {
-                        return ctx.widgets.component(307, 3).visible();
+                        return ctx.widgets.component(270,14).visible();
                     }
                 }, 150, 20);
             }
